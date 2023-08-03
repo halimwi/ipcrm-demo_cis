@@ -36,6 +36,17 @@ def scan_reg(regkey,value,reqvalue)
   end
 end
 
+def scan_reg_value(regkey,value,reqvalue)
+  require 'win32/registry'
+  begin
+    Win32::Registry::HKEY_LOCAL_MACHINE.open(regkey, Win32::Registry::KEY_READ) do |reg|
+      reg[value]
+    end
+  rescue
+      :fail
+  end
+end
+
 def audit_pol(settings,subcategory,success,failure)
   if settings[subcategory][:success] == success \
   and settings[subcategory][:failure] == failure
@@ -43,6 +54,10 @@ def audit_pol(settings,subcategory,success,failure)
   else
     :fail
   end
+end
+
+def audit_pol_value(settings,subcategory,success,failure)
+  settings[subcategory]
 end
 
 # Get current security policy
@@ -124,11 +139,27 @@ Facter.add(:cis_1_1_2) do
   end
 end
 
+Facter.add(:cis_1_1_2_value) do
+  confine :osfamily => 'windows'
+  confine :operatingsystemmajrelease => '2019'
+  setcode do
+    secpol_search_value('MaximumPasswordAge','60',sechash)
+  end
+end
+
 Facter.add(:cis_1_1_3) do
   confine :osfamily => 'windows'
   confine :operatingsystemmajrelease => '2019'
   setcode do
     secpol_search('MinimumPasswordAge','1',sechash)
+  end
+end
+
+Facter.add(:cis_1_1_3_value) do
+  confine :osfamily => 'windows'
+  confine :operatingsystemmajrelease => '2019'
+  setcode do
+    secpol_search_value('MinimumPasswordAge','1',sechash)
   end
 end
 
@@ -140,6 +171,14 @@ Facter.add(:cis_1_1_4) do
   end
 end
 
+Facter.add(:cis_1_1_4_value) do
+  confine :osfamily => 'windows'
+  confine :operatingsystemmajrelease => '2019'
+  setcode do
+    secpol_search_value('MinimumPasswordLength','14',sechash)
+  end
+end
+
 Facter.add(:cis_1_1_5) do
   confine :osfamily => 'windows'
   confine :operatingsystemmajrelease => '2019'
@@ -148,11 +187,27 @@ Facter.add(:cis_1_1_5) do
   end
 end
 
+Facter.add(:cis_1_1_5_value) do
+  confine :osfamily => 'windows'
+  confine :operatingsystemmajrelease => '2019'
+  setcode do
+    secpol_search_value('PasswordComplexity','1',sechash)
+  end
+end
+
 Facter.add(:cis_1_1_6) do
   confine :osfamily => 'windows'
   confine :operatingsystemmajrelease => '2019'
   setcode do
     secpol_search('ClearTextPassword','0',sechash)
+  end
+end
+
+Facter.add(:cis_1_1_6_value) do
+  confine :osfamily => 'windows'
+  confine :operatingsystemmajrelease => '2019'
+  setcode do
+    secpol_search_value('ClearTextPassword','0',sechash)
   end
 end
 
@@ -165,12 +220,30 @@ Facter.add(:cis_9_1_1) do
   end
 end
 
+Facter.add(:cis_9_1_1_value) do
+  confine :osfamily => 'windows'
+  confine :operatingsystemmajrelease => '2019'
+  setcode do
+    regkey = 'SOFTWARE\\Policies\\Microsoft\\WindowsFirewall\\DomainProfile'
+    scan_reg_value(regkey,'EnableFirewall',1)
+  end
+end
+
 Facter.add(:cis_9_2_1) do
   confine :osfamily => 'windows'
   confine :operatingsystemmajrelease => '2019'
   setcode do
     regkey = 'SOFTWARE\\Policies\\Microsoft\\WindowsFirewall\\PrivateProfile'
     scan_reg(regkey,'EnableFirewall',1)
+  end
+end
+
+Facter.add(:cis_9_2_1_value) do
+  confine :osfamily => 'windows'
+  confine :operatingsystemmajrelease => '2019'
+  setcode do
+    regkey = 'SOFTWARE\\Policies\\Microsoft\\WindowsFirewall\\PrivateProfile'
+    scan_reg_value(regkey,'EnableFirewall',1)
   end
 end
 
@@ -183,11 +256,28 @@ Facter.add(:cis_9_3_1) do
   end
 end
 
+Facter.add(:cis_9_3_1_value) do
+  confine :osfamily => 'windows'
+  confine :operatingsystemmajrelease => '2019'
+  setcode do
+    regkey = 'SOFTWARE\\Policies\\Microsoft\\WindowsFirewall\\PublicProfile'
+    scan_reg_value(regkey,'EnableFirewall',1)
+  end
+end
+
 Facter.add(:cis_17_1_1) do
   confine :osfamily => 'windows'
   confine :operatingsystemmajrelease => '2019'
   setcode do
     audit_pol(audithash,'Credential Validation','enable','enable')
+  end
+end
+
+Facter.add(:cis_17_1_1_value) do
+  confine :osfamily => 'windows'
+  confine :operatingsystemmajrelease => '2019'
+  setcode do
+    audit_pol_value(audithash,'Credential Validation','enable','enable')
   end
 end
 
@@ -199,11 +289,27 @@ Facter.add(:cis_17_2_1) do
   end
 end
 
+Facter.add(:cis_17_2_1_value) do
+  confine :osfamily => 'windows'
+  confine :operatingsystemmajrelease => '2019'
+  setcode do
+    audit_pol_value(audithash,'Application Group Management','enable','enable')
+  end
+end
+
 Facter.add(:cis_17_3_1) do
   confine :osfamily => 'windows'
   confine :operatingsystemmajrelease => '2019'
   setcode do
     audit_pol(audithash,'Process Creation','enable','enable')
+  end
+end
+
+Facter.add(:cis_17_3_1_value) do
+  confine :osfamily => 'windows'
+  confine :operatingsystemmajrelease => '2019'
+  setcode do
+    audit_pol_value(audithash,'Process Creation','enable','enable')
   end
 end
 
@@ -215,10 +321,26 @@ Facter.add(:cis_17_4_1) do
   end
 end
 
+Facter.add(:cis_17_4_1_value) do
+  confine :osfamily => 'windows'
+  confine :operatingsystemmajrelease => '2019'
+  setcode do
+    audit_pol_value(audithash,'Directory Service Access','enable','enable')
+  end
+end
+
 Facter.add(:cis_17_5_1) do
   confine :osfamily => 'windows'
   confine :operatingsystemmajrelease => '2019'
   setcode do
     audit_pol(audithash,'Account Lockout','enable','disable')
+  end
+end
+
+Facter.add(:cis_17_5_1_value) do
+  confine :osfamily => 'windows'
+  confine :operatingsystemmajrelease => '2019'
+  setcode do
+    audit_pol_value(audithash,'Account Lockout','enable','disable')
   end
 end
