@@ -12,6 +12,15 @@ def secpol_search(pattern,polvalue,policies)
   end
 end
 
+def secpol_search_value(pattern,polvalue,policies)
+  sec_key = policies.keys.grep(/#{pattern}/)[0]
+  if not sec_key.nil?
+    policies[sec_key]
+  else
+    :fail
+  end
+end
+
 def scan_reg(regkey,value,reqvalue)
   require 'win32/registry'
   begin
@@ -96,6 +105,14 @@ Facter.add(:cis_1_1_1) do
   confine :operatingsystemmajrelease => '2019'
   setcode do
     secpol_search('PasswordHistorySize','24',sechash)
+  end
+end
+
+Facter.add(:cis_1_1_1_value) do
+  confine :osfamily => 'windows'
+  confine :operatingsystemmajrelease => '2019'
+  setcode do
+    secpol_search_value('PasswordHistorySize','24',sechash)
   end
 end
 
