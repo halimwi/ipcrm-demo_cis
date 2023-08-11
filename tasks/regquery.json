@@ -3,8 +3,8 @@
   "private": true,
   "input_method": "powershell",
   "parameters": {
-    "command": {
-      "description": "The registry key path",
+    "registrypath": {
+      "description": "The registry path HKCU\Software\Microsoft\Windows\CurrentVersion",
       "type": "String[1]"
     }
   }
