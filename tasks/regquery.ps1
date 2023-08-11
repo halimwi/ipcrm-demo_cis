@@ -6,4 +6,6 @@ param(
     $Command
 )
 
-reg query $Command
+$commandOuptut = reg query $Command
+
+echo $commandOutput
