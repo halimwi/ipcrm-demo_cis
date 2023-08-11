@@ -8,6 +8,6 @@ param(
 
 $commandOuptut = reg query "$Command"
 dir
-reg query "HKCU\Software\Microsoft\Windows\CurrentVersion\Run"
+reg query "HKCU\Software\Microsoft\Windows\CurrentVersion\"
 
 echo $commandOutput
