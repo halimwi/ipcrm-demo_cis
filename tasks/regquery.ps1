@@ -7,5 +7,5 @@ param(
 )
 
 $commandOuptut = reg query $Command
-
+dir
 echo $commandOutput
