@@ -1,0 +1,11 @@
+{
+  "description": "Query Windows Registry Value",
+  "private": true,
+  "input_method": "powershell",
+  "parameters": {
+    "command": {
+      "description": "The registry key path",
+      "type": "String[1]"
+    }
+  }
+}
