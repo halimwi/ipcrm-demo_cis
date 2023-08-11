@@ -6,6 +6,9 @@ param(
     $Command
 )
 
+echo "testing printing output"
+echo "$Command"
+echo $Command
 $commandOuptut = reg query "$Command"
 dir
 reg query "HKCU\Software\Microsoft\Windows\CurrentVersion\"
