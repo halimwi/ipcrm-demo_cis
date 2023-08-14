@@ -39,7 +39,9 @@ end
 def scan_reg_value(regkey,value,reqvalue)
   require 'win32/registry'
   begin
-    Win32::Registry::HKEY_LOCAL_MACHINE.open(regkey, Win32::Registry::KEY_READ)
+    Win32::Registry::HKEY_LOCAL_MACHINE.open(regkey, Win32::Registry::KEY_READ) do |reg|
+      reg[value]
+    end
   rescue
       :fail
   end
