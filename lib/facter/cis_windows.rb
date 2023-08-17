@@ -313,22 +313,6 @@ Facter.add(:cis_17_3_1_value) do
   end
 end
 
-Facter.add(:cis_17_4_1) do
-  confine :osfamily => 'windows'
-  confine :operatingsystemmajrelease => '2019'
-  setcode do
-    audit_pol(audithash,'Directory Service Access','enable','enable')
-  end
-end
-
-Facter.add(:cis_17_4_1_value) do
-  confine :osfamily => 'windows'
-  confine :operatingsystemmajrelease => '2019'
-  setcode do
-    audit_pol_value(audithash,'Directory Service Access','enable','enable')
-  end
-end
-
 Facter.add(:cis_17_5_1) do
   confine :osfamily => 'windows'
   confine :operatingsystemmajrelease => '2019'
