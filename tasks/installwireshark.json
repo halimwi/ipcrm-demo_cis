@@ -1,0 +1,5 @@
+{
+  "description": "install wireshark",
+  "private": true,
+  "input_method": "powershell",
+}
